@@ -232,11 +232,11 @@ const App = () => {
         p.draw(canvas.ctx);
       });
     }
-
-    window.addEventListener('mousedown', () => {
-      setExpanded(!expanded());
-    });
   });
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded());
+  };
 
   return (
     <div class="app">
@@ -247,7 +247,10 @@ const App = () => {
         Jackson Otto
       </div>
       <div class="bubble-wrapper">
-        <span class={`bubble ${expanded() ? 'expanded' : ''}`}>
+        <span
+          class={`bubble ${expanded() ? 'expanded' : ''}`}
+          onClick={toggleExpanded}
+        >
           <span class="content-wrapper">
             <span class="content">
               <u>Directions</u>
