@@ -1,4 +1,4 @@
-import { onMount } from 'solid-js';
+import { onMount, createSignal } from 'solid-js';
 import './app.scss';
 import {
   Circle,
@@ -15,6 +15,8 @@ import {
 import triangulate from 'delaunay-triangulate';
 
 const App = () => {
+  const [expanded, setExpanded] = createSignal(false);
+
   onMount(() => {
     const canvas = new Simulation('canvas');
     canvas.fitElement();
@@ -103,17 +105,15 @@ const App = () => {
 
     function transitionColors() {
       transitioning = true;
-      const initialFromColor = fromColor.clone();
-      const initialToColor = toColor.clone();
       const fromColorDiff = new Color(
-        colorCombos[currentColorCombo][0].r - initialFromColor.r,
-        colorCombos[currentColorCombo][0].g - initialFromColor.g,
-        colorCombos[currentColorCombo][0].b - initialFromColor.b
+        colorCombos[currentColorCombo][0].r - fromColor.r,
+        colorCombos[currentColorCombo][0].g - fromColor.g,
+        colorCombos[currentColorCombo][0].b - fromColor.b
       );
       const toColorDiff = new Color(
-        colorCombos[currentColorCombo][1].r - initialToColor.r,
-        colorCombos[currentColorCombo][1].g - initialToColor.g,
-        colorCombos[currentColorCombo][1].b - initialToColor.b
+        colorCombos[currentColorCombo][1].r - toColor.r,
+        colorCombos[currentColorCombo][1].g - toColor.g,
+        colorCombos[currentColorCombo][1].b - toColor.b
       );
       transitionValues(
         () => {},
@@ -233,10 +233,9 @@ const App = () => {
       });
     }
 
-    /* ideas
-- click and hold to repel points
-- press number keys to change color scheme
-*/
+    window.addEventListener('mousedown', () => {
+      setExpanded(!expanded());
+    });
   });
 
   return (
@@ -246,6 +245,17 @@ const App = () => {
         Made by
         <br />
         Jackson Otto
+      </div>
+      <div class="bubble-wrapper">
+        <span class={`bubble ${expanded() ? 'expanded' : ''}`}>
+          <span class="content-wrapper">
+            <span class="content">
+              <u>Directions</u>
+              <br />
+              <span>Press the number keys to switch color schemes</span>
+            </span>
+          </span>
+        </span>
       </div>
     </div>
   );
