@@ -238,10 +238,18 @@ const App = () => {
     setExpanded(!expanded());
   };
 
+  const closeExpanded = () => {
+    setExpanded(false);
+  };
+
   return (
     <div class="app">
       <canvas id="canvas"></canvas>
-      <div id="author">
+      <div
+        id="author"
+        class={expanded() ? 'expanded' : ''}
+        onClick={closeExpanded}
+      >
         Made by
         <br />
         Jackson Otto

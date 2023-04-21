@@ -15,6 +15,9 @@
   cursor: default;
   user-select: none;
   z-index: 5;
+  &.expanded {
+    cursor: pointer;
+  }
 }
 
 .bubble-wrapper {
@@ -39,15 +42,10 @@
     display: flex;
     justify-content: flex-end;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    transition: 0.5s ease-in-out;
+    transition: width 0.5s ease-in-out, background 0.25s;
+    cursor: pointer;
     &.expanded {
       width: 200%;
-    }
-    &:not(.expanded) {
-      cursor: pointer;
-    }
-    &:not(.expanded):hover {
-      width: 35px;
     }
     .content-wrapper {
       padding-top: 4rem;
