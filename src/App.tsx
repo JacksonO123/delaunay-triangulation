@@ -9,8 +9,11 @@ import {
   randInt,
   Line,
   Polygon,
-  degToRad,
-  transitionValues
+  clamp,
+  transitionValues,
+  frameLoop,
+  distance,
+  degToRad
 } from 'simulationjs';
 import triangulate from 'delaunay-triangulate';
 
@@ -30,6 +33,9 @@ const App = () => {
     const outerBuffer = 100;
     // const outerBuffer = 0;
 
+    const maxEffectDist = 125 * canvas.ratio;
+    const rotationSpeed = 4;
+
     class Node extends Circle {
       direction: number; // 0 - 360
       speed = 0.5;
@@ -47,7 +53,18 @@ const App = () => {
         super(pos, radius, color, startAngle, endAngle, thickness, rotation, fill, counterClockwise);
         this.direction = randInt(360);
       }
-      translate() {
+      translate(mousePos: Vector | null) {
+        if (mousePos !== null) {
+          const dist = distance(this.pos, mousePos);
+          if (dist < maxEffectDist) {
+            const ratio = (maxEffectDist - dist) / maxEffectDist;
+            const amount = rotationSpeed * ratio;
+            const vec = new Vector(1, 0).rotate(this.direction - 90);
+            const dot = clamp(vec.dot(mousePos.clone().sub(this.pos)), -1, 1);
+            this.direction += amount * dot;
+          }
+        }
+
         const xAmount = Math.cos(degToRad(this.direction)) * this.speed;
         const yAmount = Math.sin(degToRad(this.direction)) * this.speed;
         this.pos.x += xAmount;
@@ -69,6 +86,10 @@ const App = () => {
 
     const drawLines = false;
     // const drawLines = true;
+
+    const numCircles = 100;
+    const points = generatePoints(numCircles);
+    const dots = generateCircles(points);
 
     const colorCombos = [
       [new Color(158, 219, 230), new Color(14, 123, 143)],
@@ -143,15 +164,23 @@ const App = () => {
       );
     }
 
-    const numCircles = 200;
-    const points = generatePoints(numCircles);
-    const dots = generateCircles(points);
+    let pos: Vector | null = null;
+    window.addEventListener('mousedown', (e) => {
+      pos = new Vector(e.offsetX, e.offsetY).multiply(canvas.ratio);
+    });
+    window.addEventListener('mouseup', () => {
+      pos = null;
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (pos) {
+        pos = new Vector(e.offsetX, e.offsetY).multiply(canvas.ratio);
+      }
+    });
 
-    (function drawLoop() {
-      movePoints(dots);
+    frameLoop(() => {
+      movePoints(dots, pos);
       drawTriangles(dots);
       drawPoints(dots);
-      window.requestAnimationFrame(drawLoop);
     })();
 
     function drawTriangles(circles: Node[]) {
@@ -202,8 +231,8 @@ const App = () => {
       return points.map((p) => [p.pos.x, p.pos.y]);
     }
 
-    function movePoints(points: Node[]) {
-      points.forEach((p) => p.translate());
+    function movePoints(points: Node[], mousePos: Vector | null) {
+      points.forEach((p) => p.translate(mousePos));
     }
 
     function generatePoints(num: number) {
