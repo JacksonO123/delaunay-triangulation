@@ -38,7 +38,7 @@ const App = () => {
 
     class Node extends Circle {
       direction: number; // 0 - 360
-      speed = 0.075;
+      speed = 0.045 * canvas.ratio;
       constructor(
         pos: Vector,
         radius: number,
