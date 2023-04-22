@@ -38,7 +38,7 @@ const App = () => {
 
     class Node extends Circle {
       direction: number; // 0 - 360
-      speed = 3;
+      speed = 0.075;
       constructor(
         pos: Vector,
         radius: number,
@@ -65,8 +65,8 @@ const App = () => {
           }
         }
 
-        const xAmount = Math.cos(degToRad(this.direction)) * this.speed * (1 / dt);
-        const yAmount = Math.sin(degToRad(this.direction)) * this.speed * (1 / dt);
+        const xAmount = Math.cos(degToRad(this.direction)) * this.speed * dt;
+        const yAmount = Math.sin(degToRad(this.direction)) * this.speed * dt;
         this.pos.x += xAmount;
         this.pos.y += yAmount;
 
