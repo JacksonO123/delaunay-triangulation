@@ -254,7 +254,7 @@ const App = () => {
         (p) =>
           new Node(
             p,
-            randInt(3, 2) * canvas.ratio,
+            randInt(3.25, 1.75) * canvas.ratio,
             drawLines ? new Color(0, 0, 0) : new Color(255, 255, 255, 0.4)
           )
       );
