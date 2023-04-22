@@ -30,7 +30,7 @@ const App = () => {
     const lines = new SceneCollection('test');
     canvas.add(lines);
 
-    const outerBuffer = 100;
+    const outerBuffer = 120;
     // const outerBuffer = 0;
 
     const maxEffectDist = 225 * canvas.ratio;
