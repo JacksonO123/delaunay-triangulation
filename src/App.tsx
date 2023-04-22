@@ -33,12 +33,12 @@ const App = () => {
     const outerBuffer = 100;
     // const outerBuffer = 0;
 
-    const maxEffectDist = 125 * canvas.ratio;
+    const maxEffectDist = 225 * canvas.ratio;
     const rotationSpeed = 4;
 
     class Node extends Circle {
       direction: number; // 0 - 360
-      speed = 0.5;
+      speed = 3;
       constructor(
         pos: Vector,
         radius: number,
@@ -53,7 +53,7 @@ const App = () => {
         super(pos, radius, color, startAngle, endAngle, thickness, rotation, fill, counterClockwise);
         this.direction = randInt(360);
       }
-      translate(mousePos: Vector | null) {
+      translate(mousePos: Vector | null, dt: number) {
         if (mousePos !== null) {
           const dist = distance(this.pos, mousePos);
           if (dist < maxEffectDist) {
@@ -65,21 +65,21 @@ const App = () => {
           }
         }
 
-        const xAmount = Math.cos(degToRad(this.direction)) * this.speed;
-        const yAmount = Math.sin(degToRad(this.direction)) * this.speed;
+        const xAmount = Math.cos(degToRad(this.direction)) * this.speed * (1 / dt);
+        const yAmount = Math.sin(degToRad(this.direction)) * this.speed * (1 / dt);
         this.pos.x += xAmount;
         this.pos.y += yAmount;
 
         if (this.pos.x < -outerBuffer) {
-          this.pos.x = canvas.width * canvas.ratio;
+          this.pos.x = canvas.width * canvas.ratio + outerBuffer;
         } else if (this.pos.x > canvas.width * canvas.ratio + outerBuffer) {
-          this.pos.x = 0;
+          this.pos.x = -outerBuffer;
         }
 
         if (this.pos.y < -outerBuffer) {
-          this.pos.y = canvas.height * canvas.ratio;
+          this.pos.y = canvas.height * canvas.ratio + outerBuffer;
         } else if (this.pos.y > canvas.height * canvas.ratio + outerBuffer) {
-          this.pos.y = 0;
+          this.pos.y = -outerBuffer;
         }
       }
     }
@@ -87,7 +87,7 @@ const App = () => {
     const drawLines = false;
     // const drawLines = true;
 
-    const numCircles = 100;
+    const numCircles = 200;
     const points = generatePoints(numCircles);
     const dots = generateCircles(points);
 
@@ -177,8 +177,8 @@ const App = () => {
       }
     });
 
-    frameLoop(() => {
-      movePoints(dots, pos);
+    frameLoop((p: number) => {
+      movePoints(dots, pos, Math.max(0.01, p));
       drawTriangles(dots);
       drawPoints(dots);
     })();
@@ -231,8 +231,8 @@ const App = () => {
       return points.map((p) => [p.pos.x, p.pos.y]);
     }
 
-    function movePoints(points: Node[], mousePos: Vector | null) {
-      points.forEach((p) => p.translate(mousePos));
+    function movePoints(points: Node[], mousePos: Vector | null, dt: number) {
+      points.forEach((p) => p.translate(mousePos, dt));
     }
 
     function generatePoints(num: number) {
@@ -251,7 +251,12 @@ const App = () => {
 
     function generateCircles(points: Vector[]) {
       return points.map(
-        (p) => new Node(p, randInt(6, 3), drawLines ? new Color(0, 0, 0) : new Color(255, 255, 255, 0.4))
+        (p) =>
+          new Node(
+            p,
+            randInt(3, 2) * canvas.ratio,
+            drawLines ? new Color(0, 0, 0) : new Color(255, 255, 255, 0.4)
+          )
       );
     }
 
