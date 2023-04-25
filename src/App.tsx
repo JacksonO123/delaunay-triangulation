@@ -209,7 +209,11 @@ const App = () => {
 
         const change = new Color(toColor.r - fromColor.r, toColor.g - fromColor.g, toColor.b - fromColor.b);
 
-        // const avgY = Math.min(dots[triangle[0]].pos.y, dots[triangle[1]].pos.y, dots[triangle[2]].pos.y);
+        // const avgY = clamp(
+        //   Math.max(dots[triangle[0]].pos.y, dots[triangle[1]].pos.y, dots[triangle[2]].pos.y),
+        //   0,
+        //   canvas.height * canvas.ratio
+        // );
         const avgY = Math.min(
           canvas.height * canvas.ratio,
           Math.max(0, (dots[triangle[0]].pos.y + dots[triangle[1]].pos.y + dots[triangle[2]].pos.y) / 3)
