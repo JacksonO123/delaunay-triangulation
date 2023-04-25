@@ -99,7 +99,8 @@ const App = () => {
       [new Color(137, 172, 227), new Color(234, 115, 141)],
       [new Color(251, 248, 190), new Color(35, 79, 112)],
       [new Color(173, 216, 230), new Color(0, 0, 139)],
-      [new Color(232, 201, 63), new Color(0, 0, 0)]
+      [new Color(232, 201, 63), new Color(0, 0, 0)],
+      [new Color(255, 255, 255), new Color(10, 87, 17)]
     ];
 
     let currentColorCombo = 0;
@@ -294,11 +295,9 @@ const App = () => {
           onClick={toggleExpanded}
         >
           <span class="content-wrapper">
-            <span class="content">
-              <u>Directions</u>
-              <br />
-              <span>Press the number keys to switch color schemes</span>
-            </span>
+            <u>Directions</u>
+            <br />
+            <span>Press the number keys to switch color schemes</span>
           </span>
         </span>
       </div>
